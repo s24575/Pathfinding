@@ -1,79 +1,23 @@
 #include <SFML/Graphics.hpp>
-#include "Screen.h"
-#include "Pathfinding.h"
-#include "MazeGenerator.h"
-
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include "Screen.h"
+#include "Pathfinding.h"
 
-int tile_counter = 0;
-
-namespace pf{
-    enum Tile {
-        Empty,
-        Wall,
-        Start,
-        Finish,
-        Processed,
-        Visited,
-        Backtrack
-    };
-}
+int Screen::tile_counter = 0;
 
 Screen::Screen(){
-    maze_xTiles = 20;
-    maze_yTiles = 20;
-    maze_width = 3;
-
-    xTiles = maze_xTiles * (maze_width + 1) + 1;
-    yTiles = maze_yTiles * (maze_width + 1) + 1;
-    tileSize = 8;
+    tileSize = 64;
+    board = Board {2, 2};
+    xTiles = board.getxTiles();
+    yTiles = board.getyTiles();
 
     window.create(sf::VideoMode(xTiles * tileSize + 1, yTiles * tileSize + 1), "Pathfinding algorithms");
-
-    board = new int * [yTiles];
-    for(int i = 0; i < yTiles; i++){
-        board[i] = new int[xTiles];
-        for(int j = 0; j < xTiles; j++){
-                board[i][j] = pf::Tile::Empty;
-        }
-    }
-
-    srand(time(NULL));
-    startX = (rand() % maze_xTiles);
-    startY = (rand() % maze_yTiles);
-    do {
-        finishX = (rand() % maze_xTiles);
-        finishY = (rand() % maze_yTiles);
-    } while (finishX == startX && finishY == startY);
-
-
-    MazeGenerator maze {maze_xTiles, maze_yTiles, startX, startY, finishX, finishY};
-    convertMazeToScreen(maze.generateMaze());
-
-    startX = startX * (maze_width + 1) + 2;
-    startY = startY * (maze_width + 1) + 2;
-    finishX = finishX * (maze_width + 1) + 2;
-    finishY = finishY * (maze_width + 1) + 2;
-    
-    board[startY][startX] = pf::Tile::Start;
-    board[finishY][finishX] = pf::Tile::Finish;
-
     drawAllSquares();
 }
 
 Screen::~Screen(){}
-
-void Screen::printAllSquares(){
-    for(int i = 0; i < yTiles; i++){
-        for(int j = 0; j < xTiles; j++){
-            std::cout << '[' << board[i][j] << ']';
-        }
-        std::cout << '\n';
-    }
-    std::cout << '\n';
-}
 
 sf::Color chooseColor(int state){
     switch(state){
@@ -98,37 +42,29 @@ sf::Color chooseColor(int state){
 
 void Screen::drawAllSquares(){
     window.clear();
-
+    // draw squares
     for(int i = 0; i < yTiles; i++){
         for(int j = 0; j < xTiles; j++){
             sf::RectangleShape tile(sf::Vector2f(tileSize, tileSize));
             tile.setPosition(j * tileSize, i * tileSize);
-            tile.setFillColor(chooseColor(board[i][j]));
+            tile.setFillColor(chooseColor(board.getBoard()[i][j]));
             window.draw(tile);
-            tile_counter++;
+            Screen::tile_counter++;
         }
     }
 
-    // lines
-    sf::Vertex line[] = {
-        sf::Vertex(sf::Vector2f(0, yTiles * tileSize + 1), sf::Color::Black),
-        sf::Vertex(sf::Vector2f(xTiles * tileSize, yTiles * tileSize + 1), sf::Color::Black)};
-    window.draw(line, 2, sf::Lines);
+    // draw vertical lines
     for(int i = 0; i < yTiles; i++){
         sf::Vertex line[] = {
-            sf::Vertex(sf::Vector2f(0, i * tileSize + 1), sf::Color::Black),
-            sf::Vertex(sf::Vector2f(xTiles * tileSize, i * tileSize + 1), sf::Color::Black)};
+            sf::Vertex(sf::Vector2f(0, i * tileSize + (i > 0)), sf::Color::Black),
+            sf::Vertex(sf::Vector2f(xTiles * tileSize, i * tileSize + (i > 0)), sf::Color::Black)};
         window.draw(line, 2, sf::Lines);
     }
-
-    sf::Vertex line2[] = {
-        sf::Vertex(sf::Vector2f(xTiles * tileSize + 1, 0), sf::Color::Black),
-        sf::Vertex(sf::Vector2f(xTiles * tileSize + 1, yTiles * tileSize), sf::Color::Black)};
-    window.draw(line2, 2, sf::Lines);
-    for(int j = -1; j < xTiles; j++){
+    // draw horizontal lines
+    for(int i = 0; i < xTiles; i++){
         sf::Vertex line[] = {
-            sf::Vertex(sf::Vector2f(j * tileSize + 1, 0), sf::Color::Black),
-            sf::Vertex(sf::Vector2f(j * tileSize + 1, yTiles * tileSize), sf::Color::Black)};
+            sf::Vertex(sf::Vector2f(i * tileSize + (i > 0), 0), sf::Color::Black),
+            sf::Vertex(sf::Vector2f(i * tileSize + (i > 0), yTiles * tileSize), sf::Color::Black)};
         window.draw(line, 2, sf::Lines);
     }
 
@@ -136,27 +72,27 @@ void Screen::drawAllSquares(){
 }
 
 void Screen::reset(){
+    window.clear();
     for(int i = 0; i < yTiles; i++){
         for(int j = 0; j < xTiles; j++){
-            if(board[i][j] != pf::Empty &&
-                board[i][j] != pf::Wall &&
-                board[i][j] != pf::Start &&
-                board[i][j] != pf::Finish)
+            if(board.getBoard()[i][j] != pf::Empty &&
+                board.getBoard()[i][j] != pf::Wall &&
+                board.getBoard()[i][j] != pf::Start &&
+                board.getBoard()[i][j] != pf::Finish)
             {
-                board[i][j] = pf::Empty;
+                board.getBoard()[i][j] = pf::Empty;
             }
         }
     }
     drawAllSquares();
 }
 
-void Screen::updateSquare(int x, int y)
-{
+void Screen::updateSquare(int x, int y){
     sf::RectangleShape tile(sf::Vector2f(tileSize - 1, tileSize - 1));
     tile.setPosition(x * tileSize + 1, y * tileSize + 1);
-    tile.setFillColor(chooseColor(board[y][x]));
+    tile.setFillColor(chooseColor(board.getBoard()[y][x]));
     window.draw(tile);
-    tile_counter++;
+    Screen::tile_counter++;
     window.display();
 }
 
@@ -164,8 +100,8 @@ void Screen::placeWall(sf::Vector2i pos){
     int x = pos.x / tileSize;
     int y = pos.y / tileSize;
     if(x < 0 || xTiles <= x || y < 0 || yTiles <= y) return;
-    if(board[y][x] == pf::Empty){
-        board[y][x] = pf::Wall;
+    if(board.getBoard()[y][x] == pf::Empty){
+        board.getBoard()[y][x] = pf::Wall;
         updateSquare(x, y);
     }
 }
@@ -174,38 +110,20 @@ void Screen::removeWall(sf::Vector2i pos){
     int x = pos.x / tileSize;
     int y = pos.y / tileSize;
     if(x < 0 || xTiles <= x || y < 0 || yTiles <= y) return;
-    if (board[y][x] == pf::Wall){
-        board[y][x] = pf::Empty;
+    if (board.getBoard()[y][x] == pf::Wall){
+        board.getBoard()[y][x] = pf::Empty;
         updateSquare(x, y);
     }
 }
 
-void Screen::convertMazeToScreen(uint8_t* maze){
-    for(int i = 0; i < xTiles; i++)
-        board[0][i] = pf::Wall;
-    for(int i = 0; i < yTiles; i++)
-        board[i][0] = pf::Wall;
-    
-    for(int i = 0; i < maze_yTiles; i++){
-        for(int j = 0; j < maze_xTiles; j++){
-            board[(maze_width + 1) * (i + 1)][(maze_width + 1) * (j + 1)] = pf::Wall;
-
-            if((maze[i * maze_xTiles + j] & 2) == 0)
-                for(int i2 = 0; i2 < maze_width; i2++)
-                    board[(maze_width + 1) * i + 1 + i2][(maze_width + 1) * (j + 1)] = pf::Wall;
-            
-            if((maze[i * maze_xTiles + j] & 4) == 0)
-                for(int i2 = 0; i2 < maze_width; i2++)
-                    board[(maze_width + 1) * (i + 1)][(maze_width + 1) * j + 1 + i2] = pf::Wall;
-        }
-    }
-}
-
 void Screen::displayDepthFirstSearch(){
-    Pathfinding dfs {board, xTiles, yTiles, {startX, startY}, {finishX, finishY}};
+    std::pair<int,int> start = board.getStart();
+    std::pair<int,int> finish = board.getFinish();
+
+    Pathfinding dfs {board.getBoard(), xTiles, yTiles, start, finish};
     std::vector<std::vector<int>> path (dfs.DepthFirstSearch());
     for(std::vector<int> cords : path){
-        board[cords[1]][cords[0]] = cords[2];
+        board.getBoard()[cords[1]][cords[0]] = cords[2];
         updateSquare(cords[0], cords[1]);
         std::chrono::milliseconds timespan(1);
         std::this_thread::sleep_for(timespan);
@@ -213,14 +131,11 @@ void Screen::displayDepthFirstSearch(){
 
     const auto map = dfs.getMap();
 
-    std::pair<int,int> start {startX, startY};
-    std::pair<int,int> finish {finishX, finishY};
-
     if (map.count(finish)){
         std::pair<int,int> cords {map.at(finish)};
 
         while(cords != start){
-            board[cords.second][cords.first] = pf::Backtrack;
+            board.getBoard()[cords.second][cords.first] = pf::Backtrack;
             updateSquare(cords.first, cords.second);
             cords = map.at(cords);
             std::chrono::milliseconds timespan(10);
@@ -230,10 +145,13 @@ void Screen::displayDepthFirstSearch(){
 }
 
 void Screen::displayBreadthFirstSearch(){
-    Pathfinding bfs {board, xTiles, yTiles, {startX, startY}, {finishX, finishY}};
+    std::pair<int,int> start = board.getStart();
+    std::pair<int,int> finish = board.getFinish();
+
+    Pathfinding bfs {board.getBoard(), xTiles, yTiles, start, finish};
     std::vector<std::vector<int>> path (bfs.BreadthFirstSearch());
     for(std::vector<int> cords : path){
-        board[cords[1]][cords[0]] = cords[2];
+        board.getBoard()[cords[1]][cords[0]] = cords[2];
         updateSquare(cords[0], cords[1]);
         std::chrono::milliseconds timespan(1);
         std::this_thread::sleep_for(timespan);
@@ -241,14 +159,11 @@ void Screen::displayBreadthFirstSearch(){
 
     const auto map = bfs.getMap();
 
-    std::pair<int,int> start {startX, startY};
-    std::pair<int,int> finish {finishX, finishY};
-
     if (map.count(finish)){
         std::pair<int,int> cords {map.at(finish)};
 
         while(cords != start){
-            board[cords.second][cords.first] = pf::Backtrack;
+            board.getBoard()[cords.second][cords.first] = pf::Backtrack;
             updateSquare(cords.first, cords.second);
             cords = map.at(cords);
             std::chrono::milliseconds timespan(10);
@@ -311,7 +226,7 @@ void Screen::run()
             default:
                 break;
             }
-            // std::cout << tile_counter << '\n';
+            // std::cout << Screen::tile_counter << '\n';
         }
     }
 }

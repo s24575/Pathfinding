@@ -67,14 +67,5 @@ uint8_t* MazeGenerator::generateMaze(){
             visited_count++;
         }
     }
-
-    // for(int i = 0; i < yTiles; i++){
-    //     for(int j = 0; j < xTiles; j++){
-    //     std::bitset<8> x(*(maze + (i * xTiles + j)));
-    //     std::cout << x << ' ';
-    //     }
-    //     std::cout << '\n';
-    // }
-
     return maze;
 }
