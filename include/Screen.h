@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 #include "Board.h"
+#include "Pathfinding.h"
 
 class Screen{
 private:
@@ -18,8 +19,9 @@ private:
     void updateSquare(int x, int y);
     void placeWall(sf::Vector2i pos);
     void removeWall(sf::Vector2i pos);
-    void displayDepthFirstSearch();
-    void displayBreadthFirstSearch();
+    void depthFirstSearch();
+    void breadthFirstSearch();
+    void displayAlgorithm(Pathfinding* algorithm);
     void reset();
 public:
     Screen();

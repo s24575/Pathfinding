@@ -1,8 +1,6 @@
 #pragma once
 
 #include <utility>
-#include <stack>
-#include <queue>
 #include <vector>
 #include <set>
 #include <map>
@@ -23,18 +21,15 @@ protected:
     bool found;
 
     std::vector<std::vector<int>> actions;
-    std::stack<std::pair<int,int>> stack;
-    std::queue<std::pair<int,int>> queue;
     std::set<std::pair<int,int>> visited;
     std::map<std::pair<int,int>,std::pair<int,int>> backtrack;
     
-    void dfsCheck(int x, int y);
-    void bfsCheck(int x, int y);
+    virtual void checkNeighbor(int x, int y) = 0;
 public:
-    Pathfinding(int** board, int xTiles, int yTiles, std::pair<int,int> start, std::pair<int,int> finish);
-
-    std::vector<std::vector<int>> DepthFirstSearch();
-    std::vector<std::vector<int>> BreadthFirstSearch();
+    Pathfinding(int** board, int xTiles, int yTiles, std::pair<int,int> start, std::pair<int,int> finish)
+        : board(board), xTiles(xTiles), yTiles(yTiles), start(start), finish(finish) {}
+    virtual ~Pathfinding() {}
+    virtual std::vector<std::vector<int>> runAlgorithm() = 0;
 
     std::map<std::pair<int,int>,std::pair<int,int>> getMap(){ return backtrack; }
 };

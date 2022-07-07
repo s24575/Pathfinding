@@ -3,13 +3,14 @@
 #include <chrono>
 #include <thread>
 #include "Screen.h"
-#include "Pathfinding.h"
+#include "DepthFirstSearch.h"
+#include "BreadthFirstSearch.h"
 
 int Screen::tile_counter = 0;
 
 Screen::Screen(){
-    tileSize = 64;
-    board = Board {2, 2};
+    tileSize = 8;
+    board = Board {20, 20};
     xTiles = board.getxTiles();
     yTiles = board.getyTiles();
 
@@ -116,48 +117,30 @@ void Screen::removeWall(sf::Vector2i pos){
     }
 }
 
-void Screen::displayDepthFirstSearch(){
-    std::pair<int,int> start = board.getStart();
-    std::pair<int,int> finish = board.getFinish();
-
-    Pathfinding dfs {board.getBoard(), xTiles, yTiles, start, finish};
-    std::vector<std::vector<int>> path (dfs.DepthFirstSearch());
-    for(std::vector<int> cords : path){
-        board.getBoard()[cords[1]][cords[0]] = cords[2];
-        updateSquare(cords[0], cords[1]);
-        std::chrono::milliseconds timespan(1);
-        std::this_thread::sleep_for(timespan);
-    }
-
-    const auto map = dfs.getMap();
-
-    if (map.count(finish)){
-        std::pair<int,int> cords {map.at(finish)};
-
-        while(cords != start){
-            board.getBoard()[cords.second][cords.first] = pf::Backtrack;
-            updateSquare(cords.first, cords.second);
-            cords = map.at(cords);
-            std::chrono::milliseconds timespan(10);
-            std::this_thread::sleep_for(timespan);
-        }
-    }
+void Screen::depthFirstSearch(){
+    DepthFirstSearch* depthFS = new DepthFirstSearch {board.getBoard(), xTiles, yTiles, board.getStart(), board.getFinish()};
+    displayAlgorithm(depthFS);
+    delete depthFS;
 }
 
-void Screen::displayBreadthFirstSearch(){
+void Screen::breadthFirstSearch(){
+    BreadthFirstSearch* breadthFS = new BreadthFirstSearch {board.getBoard(), xTiles, yTiles, board.getStart(), board.getFinish()};
+    displayAlgorithm(breadthFS);
+    delete breadthFS;
+}
+
+void Screen::displayAlgorithm(Pathfinding* algorithm){
     std::pair<int,int> start = board.getStart();
     std::pair<int,int> finish = board.getFinish();
 
-    Pathfinding bfs {board.getBoard(), xTiles, yTiles, start, finish};
-    std::vector<std::vector<int>> path (bfs.BreadthFirstSearch());
+    std::vector<std::vector<int>> path (algorithm->runAlgorithm());
     for(std::vector<int> cords : path){
         board.getBoard()[cords[1]][cords[0]] = cords[2];
         updateSquare(cords[0], cords[1]);
-        std::chrono::milliseconds timespan(1);
-        std::this_thread::sleep_for(timespan);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 
-    const auto map = bfs.getMap();
+    const auto map = algorithm->getMap();
 
     if (map.count(finish)){
         std::pair<int,int> cords {map.at(finish)};
@@ -166,8 +149,7 @@ void Screen::displayBreadthFirstSearch(){
             board.getBoard()[cords.second][cords.first] = pf::Backtrack;
             updateSquare(cords.first, cords.second);
             cords = map.at(cords);
-            std::chrono::milliseconds timespan(10);
-            std::this_thread::sleep_for(timespan);
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     }
 }
@@ -194,12 +176,11 @@ void Screen::run()
                     reset();
                     break;
                 case sf::Keyboard::D:
-                    displayDepthFirstSearch();
+                    depthFirstSearch();
                     break;
                 case sf::Keyboard::B:
-                    displayBreadthFirstSearch();
+                    breadthFirstSearch();
                     break;
-                    
                 default:
                     break;
                 }
