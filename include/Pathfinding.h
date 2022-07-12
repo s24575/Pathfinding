@@ -1,5 +1,8 @@
 #pragma once
 
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include "Graph.h"
 #include <utility>
 #include <vector>
 #include <set>
@@ -7,7 +10,9 @@
 
 class Pathfinding{
 protected:
-    int** board;
+    Graph* graph;
+    std::vector<sf::RectangleShape>* TileMap;
+    
     int xTiles;
     int yTiles;
 
@@ -25,11 +30,11 @@ protected:
     std::map<std::pair<int,int>,std::pair<int,int>> backtrack;
     
     virtual void checkNeighbor(int x, int y) = 0;
+    virtual bool runBacktrack(int n) = 0;
 public:
-    Pathfinding(int** board, int xTiles, int yTiles, std::pair<int,int> start, std::pair<int,int> finish)
-        : board(board), xTiles(xTiles), yTiles(yTiles), start(start), finish(finish) {}
+    Pathfinding(Graph* graph, std::vector<sf::RectangleShape>* TileMap, int xTiles, int yTiles, std::pair<int,int> start, std::pair<int,int> finish)
+        : graph(graph), TileMap(TileMap), xTiles(xTiles), yTiles(yTiles), start(start), finish(finish) {}
     virtual ~Pathfinding() {}
-    virtual std::vector<std::vector<int>> runAlgorithm() = 0;
 
-    std::map<std::pair<int,int>,std::pair<int,int>> getMap(){ return backtrack; }
+    virtual bool runAlgorithm(int n) = 0;
 };

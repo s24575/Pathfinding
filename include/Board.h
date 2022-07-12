@@ -1,48 +1,50 @@
 #pragma once
 
+#include <SFML/Graphics.hpp>
 #include "MazeGenerator.h"
-
-namespace pf{
-    enum Tile {
-        Empty,
-        Wall,
-        Start,
-        Finish,
-        Processed,
-        Visited,
-        Backtrack
-    };
-}
+#include "Graph.h"
+#include "DepthFirstSearch.h"
+#include "BreadthFirstSearch.h"
 
 class Board{
 private:
-    int** board;
-
+    sf::RenderWindow* window;
     int xTiles;
     int yTiles;
+    int tileSize;
 
-    int maze_xTiles;
-    int maze_yTiles;
     int maze_width;
+    int maze_height;
+    int corridor_width;
 
     int startX;
     int startY;
     int finishX;
     int finishY;
 
-    void placeWall(int x, int y);
-    void removeWall(int x, int y);
+    Graph graph;
+    std::unique_ptr<Pathfinding> algorithm;
+    std::vector<sf::RectangleShape> tileMap;
+
+    sf::Color Gray = sf::Color{50, 50, 50};
+    sf::Color Black = sf::Color::Black;
+    sf::Color Green = sf::Color::Green;
+    sf::Color Red = sf::Color::Red;
+    sf::Color Yellow = sf::Color::Yellow;
+    sf::Color White = sf::Color::White;
+    sf::Color Blue = sf::Color::Blue;
+    sf::Color Magenta = sf::Color::Magenta;
+
     void convertMazeToBoard(uint8_t* maze);
 public:
-    Board();
-    Board(int x, int y);
-    // Board(const Board& other);
-    // ~Board();
-    void run();
-
-    inline int** getBoard(){ return board; };
-    inline int getxTiles(){ return xTiles; };
-    inline int getyTiles(){ return yTiles; };
-    inline std::pair<int,int> getStart(){ return {startX, startY}; };
-    inline std::pair<int,int> getFinish(){ return {finishX, finishY}; };
+    Board(sf::RenderWindow* window, int width, int height, int tileSize, int maze_width, int maze_height, int corridor_width);
+    void createDepthFirstSearch();
+    void createBreadthFirstSearch();
+    void runAlgorithm(int n);
+    void placeWall(sf::Vector2i pos);
+    void removeWall(sf::Vector2i pos);
+    sf::Color& getColor(int x, int y);
+    void drawAllSquares();
+    void updateSquare(int x, int y);
+    void reset();
 };

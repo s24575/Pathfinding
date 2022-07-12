@@ -1,33 +1,17 @@
 #pragma once
 
-#include <SFML/Graphics/RenderWindow.hpp>
 #include "Board.h"
-#include "Pathfinding.h"
 
 class Screen{
+public:
+    Screen(int width, int height, int tileSize, int maze_width, int maze_height, int corridor_width);
+    void run();
+
 private:
     sf::RenderWindow window;
     Board board;
-    int xTiles; // duplicate in board
-    int yTiles; // duplicate in board
-    int tileSize;
+    sf::Event event;
 
-    bool isLeftPressed = false;
-    bool isRightPressed = false;
-
-    void drawAllSquares();
-    void updateSquare(int x, int y);
-    void placeWall(sf::Vector2i pos);
-    void removeWall(sf::Vector2i pos);
-    void depthFirstSearch();
-    void breadthFirstSearch();
-    void displayAlgorithm(Pathfinding* algorithm);
-    void reset();
-public:
-    Screen();
-    ~Screen();
-
-    void run();
-
-    static int tile_counter;
+    bool leftPressed = false;
+    bool rightPressed = false;
 };

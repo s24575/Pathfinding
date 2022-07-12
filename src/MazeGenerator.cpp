@@ -37,7 +37,6 @@ uint8_t* MazeGenerator::generateMaze(){
         if(surrounding.empty()) stack.pop();
         else {
             uint8_t next_cell_dir = surrounding[rand() % surrounding.size()];
-
             switch (next_cell_dir)
             {
             case UP:

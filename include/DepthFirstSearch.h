@@ -7,9 +7,10 @@ class DepthFirstSearch : public Pathfinding{
 protected:
     std::stack<std::pair<int,int>> stack;
     
-    void checkNeighbor(int x, int y);
+    void checkNeighbor(int x, int y) override;
+    bool runBacktrack(int n) override;
 public:
-    DepthFirstSearch(int** board, int xTiles, int yTiles, std::pair<int,int> start, std::pair<int,int> finish);
+    DepthFirstSearch(Graph* graph, std::vector<sf::RectangleShape>* TileMap, int xTiles, int yTiles, std::pair<int,int> start, std::pair<int,int> finish);
 
-    std::vector<std::vector<int>> runAlgorithm();
+    bool runAlgorithm(int n) override;
 };
