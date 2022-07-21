@@ -9,9 +9,8 @@ public:
 
 private:
     sf::RenderWindow window;
-    Board board;
     sf::Event event;
+    Board board;
 
     bool leftPressed = false;
-    bool rightPressed = false;
 };

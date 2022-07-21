@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <bits/stdc++.h>
 #include <cmath>
 
 struct Node{
@@ -20,8 +21,9 @@ public:
     Graph(int x, int y);
     Node& getNode(int x, int y);
     void reset();
-private:
-    std::vector<Node> graph;
+    
     int xTiles;
     int yTiles;
+private:
+    std::vector<Node> graph;
 };

@@ -1,5 +1,3 @@
 .vscode
 bin
 lib
-Makefile
-useless_code.cpp
