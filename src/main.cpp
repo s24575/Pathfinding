@@ -1,12 +1,11 @@
 #include "Screen.h"
-#include <SFML/Window/VideoMode.hpp>
 
 int main()
 {
     srand(time(0));
 
-    unsigned int const screen_width {sf::VideoMode::getDesktopMode().width};
-    unsigned int const screen_height {sf::VideoMode::getDesktopMode().height};
+    unsigned int const screen_width = sf::VideoMode::getDesktopMode().width;
+    unsigned int const screen_height = sf::VideoMode::getDesktopMode().height;
 
     int constexpr maze_width = 19;
     int constexpr maze_height = 10;
@@ -18,6 +17,4 @@ int main()
     
     Screen screen(width, height, tileSize, maze_width, maze_height, corridor_width);
     screen.run();
-
-    return 0;
 }

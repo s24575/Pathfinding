@@ -1,8 +1,6 @@
 #include "MazeGenerator.h"
-#include <stdlib.h>
-#include <time.h>
-#include <iostream>
-#include <bitset>
+// #include <stdlib.h>
+// #include <bitset>
 
 MazeGenerator::MazeGenerator(int xTiles, int yTiles, int startX, int startY, int finishX, int finishY)
 : xTiles(xTiles), yTiles(yTiles), startX(startX), startY(startY), finishX(finishX), finishY(finishY){

@@ -1,5 +1,4 @@
 #include "Board.h"
-#include <iostream>
 
 Board::Board(sf::RenderWindow* window, int& width, int& height, int& tileSize, int& maze_width, int& maze_height, int& corridor_width)
     : window(window),
@@ -37,22 +36,22 @@ Board::Board(sf::RenderWindow* window, int& width, int& height, int& tileSize, i
     
     for(int y = 0; y < yTiles; y++){
         for(int x = 0; x < xTiles; x++){
-            tileMap[y * xTiles + x].setPosition(x * tileSize, y * tileSize);
+            tileMap[y * xTiles + x].setPosition(x * (float)tileSize, y * (float)tileSize);
             updateSquare(x, y);
         }
     }
 }
 
-void Board::createAlgorithm(int const& algorithm_type){
-    if(algorithm_type == DFS) algorithm = std::make_unique<DepthFirstSearch>(&graph, &tileMap, start, finish);
-    else if(algorithm_type == BFS) algorithm = std::make_unique<BreadthFirstSearch>(&graph, &tileMap, start, finish);
-    else if(algorithm_type == DIJKSTRA) algorithm = std::make_unique<Dijkstra>(&graph, &tileMap, start, finish);
-    else if(algorithm_type == ASTAR) algorithm = std::make_unique<AStar>(&graph, &tileMap, start, finish);
+void Board::createAlgorithm(algorithm_type algorithm_type){
+    if(algorithm_type == algorithm_type::DFS) algorithm = std::make_unique<DepthFirstSearch>(&graph, &tileMap, start, finish);
+    else if(algorithm_type == algorithm_type::BFS) algorithm = std::make_unique<BreadthFirstSearch>(&graph, &tileMap, start, finish);
+    else if(algorithm_type == algorithm_type::DIJKSTRA) algorithm = std::make_unique<Dijkstra>(&graph, &tileMap, start, finish);
+    else if(algorithm_type == algorithm_type::ASTAR) algorithm = std::make_unique<AStar>(&graph, &tileMap, start, finish);
 
     current_algorithm_type = algorithm_type;
 }
 
-void Board::runAlgorithm(int const& n){
+void Board::runAlgorithm(int n){
     if(algorithm && !algorithm->finished) algorithm->runAlgorithm(n);
 }
 
@@ -103,10 +102,28 @@ void Board::checkWall(sf::Vector2i const& pos){
     }
 }
 
-void Board::drawAllSquares() const{
-    for (auto const& tile : tileMap){
-        window->draw(tile);
-    }
+//void Board::drawAllSquares() const {
+//    sf::VertexArray tiles(sf::Quads);
+//    size_t n = tileMap.size();
+//    for (size_t i = 0; i < n; ++i) {
+//        tiles.append(sf::Vertex(tileMap[i].getPosition(), tileMap[i].getFillColor()));
+//        tiles.append(sf::Vertex(tileMap[i].getPosition() + sf::Vector2f((float)tileSize, 0.f), tileMap[i].getFillColor()));
+//        tiles.append(sf::Vertex(tileMap[i].getPosition() + sf::Vector2f((float)tileSize, (float)tileSize), tileMap[i].getFillColor()));
+//        tiles.append(sf::Vertex(tileMap[i].getPosition() + sf::Vector2f(0.f, (float)tileSize), tileMap[i].getFillColor()));
+//    };
+//    window->draw(tiles);
+//}
+
+void Board::drawAllSquares() const {
+    sf::VertexArray tiles(sf::Quads, 4 * xTiles * yTiles);
+    size_t n = tileMap.size();
+    for (size_t i = 0; i < n; ++i) {
+        tiles[4 * i] = sf::Vertex(tileMap[i].getPosition(), tileMap[i].getFillColor());
+        tiles[4 * i + 1] = sf::Vertex(tileMap[i].getPosition() + sf::Vector2f((float)tileSize, 0.f), tileMap[i].getFillColor());
+        tiles[4 * i + 2] = sf::Vertex(tileMap[i].getPosition() + sf::Vector2f((float)tileSize, (float)tileSize), tileMap[i].getFillColor());
+        tiles[4 * i + 3] = sf::Vertex(tileMap[i].getPosition() + sf::Vector2f(0.f, (float)tileSize), tileMap[i].getFillColor());
+    };
+    window->draw(tiles);
 }
 
 void Board::updateSquare(int const& x, int const& y){
@@ -137,6 +154,8 @@ void Board::removeAllWalls(){
             updateSquare(x, y);
         }
     }
+    graph.reset();
+    algorithm.reset();
 }
 
 void Board::convertMazeToBoard(uint8_t* const maze){

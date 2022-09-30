@@ -48,9 +48,9 @@ void Dijkstra::runBacktrack(){
 }
 
 double Dijkstra::calculateManhattanDistance(Node* start, Node* finish){
-    return abs(start->x - finish->x) + abs(start->y - finish->y);
+    return (double)abs(start->x - finish->x) + (double)abs(start->y - finish->y);
 }
 
 double Dijkstra::calculateEuclideanDistance(Node* start, Node* finish){
-    return sqrt(abs(start->x - finish->x) * abs(start->x - finish->x) + abs(start->y - finish->y) * abs(start->y - finish->y));
+    return sqrt((double)abs(start->x - finish->x) * (double)abs(start->x - finish->x) + (double)abs(start->y - finish->y) * (double)abs(start->y - finish->y));
 }
