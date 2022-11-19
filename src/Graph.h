@@ -20,13 +20,22 @@ struct Node{
 class Graph{
 public:
     Graph(int x, int y);
+    void addNeighbors();
     Node& getNode(int x, int y);
     void reset();
+    void fullReset();
+
+    bool getDiagonalEnabled() const { return diagonalEnabled; }
+    void setDiagonalEnabled(bool diagonal) { diagonalEnabled = diagonal; }
+    int getWeight() const { return weight; }
+    void setWeight(int new_weight) { weight = new_weight; }
     
     int xTiles;
     int yTiles;
 private:
     std::vector<Node> graph;
+    bool diagonalEnabled = false;
+    int weight = 1;
 };
 
 #endif // GRAPH_H

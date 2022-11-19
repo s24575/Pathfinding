@@ -11,9 +11,6 @@ public:
 private:
     sf::RenderWindow window;
     Board board;
-
-    const int tiles_total;
-    bool left_pressed = false;
 };
 
 #endif // SCREEN_H

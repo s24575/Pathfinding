@@ -4,7 +4,6 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include "Graph.h"
-//#include <utility>
 #include <vector>
 
 class Pathfinding{
@@ -15,8 +14,8 @@ public:
     virtual ~Pathfinding() {}
 
     virtual bool runAlgorithm(int const& n) = 0;
-        
-    bool finished = false;
+
+    bool hasFinished() const { return finished; }
 protected:
     Graph* graph;
     std::vector<sf::RectangleShape>* TileMap;
@@ -25,6 +24,7 @@ protected:
     Node* start;
     Node* finish;
 
+    bool finished = false;
 };
 
 #endif // PATHFINDING_H
