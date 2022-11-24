@@ -3,19 +3,20 @@
 
 #include "Screen.h"
 
-Screen::Screen(int width, int height, int tileSize, int maze_width, int maze_height, int corridor_width)
-    : window(sf::VideoMode(width * tileSize, height * tileSize), "Pathfinding"),
-      board(&window, width, height, tileSize, maze_width, maze_height, corridor_width)
-{}
+Screen::Screen()
+    : window(
+        sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT),
+        WINDOW_NAME,
+        sf::Style::Default
+    ), board(&window)
+{
+
+}
 
 void Screen::run(){
     sf::Event event;
     sf::Clock clock;
-    constexpr int framerate = 60;
-    constexpr int solve_time = 5; // time it takes to finish maze
-
     bool isLeftPressed = false;
-    int total_tiles = board.getTotalTiles();
 
     // ImGui setup
     IMGUI_CHECKVERSION();
@@ -30,7 +31,7 @@ void Screen::run(){
     static int graphWeight = 1;
     static int distanceCalculation = 0;
 
-    window.setFramerateLimit(framerate);
+    window.setFramerateLimit(FRAMERATE);
     while (window.isOpen()){
         while (window.pollEvent(event)){
             // INPUT
@@ -97,8 +98,8 @@ void Screen::run(){
             board.createAlgorithm(static_cast<algorithm_type>(currentAlgorithm));
             board.runAlgorithm(board.getTotalTiles());
         }
-        // progress algorithm so it takes around {solve_time} seconds in total
-        else if(!isStopped) board.runAlgorithm((int)(total_tiles * clock.getElapsedTime().asSeconds() / solve_time));
+        // progress algorithm so it takes around {SOLVE_TIME} seconds in total
+        else if(!isStopped) board.runAlgorithm((int)(TOTAL_TILES * clock.getElapsedTime().asSeconds() / SOLVE_TIME));
 
         // ImGui window
         ImGui::SFML::Update(window, clock.restart());

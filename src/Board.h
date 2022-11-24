@@ -9,6 +9,8 @@
 #include "Dijkstra.h"
 #include "AStar.h"
 
+#include "Constants.hpp"
+
 enum class algorithm_type{
     DFS,
     BFS,
@@ -18,14 +20,14 @@ enum class algorithm_type{
 
 class Board{
 private:
-    sf::RenderWindow* window;
-    int xTiles;
-    int yTiles;
-    int tileSize;
+    sf::RenderWindow* _window;
+    int xTiles = X_TILES;
+    int yTiles = Y_TILES;
+    int tileSize = TILE_SIZE;
 
-    int maze_width;
-    int maze_height;
-    int corridor_width;
+    int maze_width = MAZE_WIDTH;
+    int maze_height = MAZE_HEIGHT;
+    int corridor_width = MAZE_CORRIDOR_WIDTH;
 
     Node* start;
     Node* finish;
@@ -59,7 +61,8 @@ private:
 
     void convertMazeToBoard(uint8_t* const maze);
 public:
-    Board(sf::RenderWindow* window, int& width, int& height, int& tileSize, int& maze_width, int& maze_height, int& corridor_width);
+    Board(sf::RenderWindow* _window);
+    //Board(sf::RenderWindow* _window, int& width, int& height, int& tileSize, int& maze_width, int& maze_height, int& corridor_width);
     void updateSettings(bool areDiagonalsEnabled, int graphWeight, int distanceCalculation);
 
     void createAlgorithm(algorithm_type type);

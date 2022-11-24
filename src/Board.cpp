@@ -1,14 +1,8 @@
 #include "Board.h"
 
-Board::Board(sf::RenderWindow* window, int& width, int& height, int& tileSize, int& maze_width, int& maze_height, int& corridor_width)
-    : window(window),
-    xTiles(width),
-    yTiles(height),
-    tileSize(tileSize),
-    maze_width(maze_width),
-    maze_height(maze_height),
-    corridor_width(corridor_width),
-    graph(width, height)
+Board::Board(sf::RenderWindow* _window)
+    : _window(_window),
+    graph(X_TILES, Y_TILES)
 {
     generateMaze();
 }
@@ -144,7 +138,7 @@ void Board::drawAllSquares() const {
         tiles[4 * i + 2] = sf::Vertex(position + sf::Vector2f((float)tileSize, (float)tileSize), color);
         tiles[4 * i + 3] = sf::Vertex(position + sf::Vector2f(0.f, (float)tileSize), color);
     };
-    window->draw(tiles);
+    _window->draw(tiles);
 }
 
 void Board::updateSquare(int const& x, int const& y){

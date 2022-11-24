@@ -2,10 +2,11 @@
 #define SCREEN_H
 
 #include "Board.h"
+#include "Constants.hpp"
 
 class Screen{
 public:
-    Screen(int width, int height, int tileSize, int maze_width, int maze_height, int corridor_width);
+    Screen();
     void run();
 
 private:

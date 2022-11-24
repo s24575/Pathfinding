@@ -2,8 +2,6 @@
 #define GRAPH_H
 
 #include <vector>
-//#include <cmath>
-//#define INFINITY ((float)(1e+300 * 1e+300))
 
 struct Node{
     Node(int x, int y) : x(x), y(y) {}
@@ -25,9 +23,9 @@ public:
     void reset();
     void fullReset();
 
-    bool getDiagonalEnabled() const { return diagonalEnabled; }
+    [[nodiscard]] bool getDiagonalEnabled() const { return diagonalEnabled; }
     void setDiagonalEnabled(bool diagonal) { diagonalEnabled = diagonal; }
-    int getWeight() const { return weight; }
+    [[nodiscard]] int getWeight() const { return weight; }
     void setWeight(int new_weight) { weight = new_weight; }
     
     int xTiles;
