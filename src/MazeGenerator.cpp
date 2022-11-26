@@ -1,6 +1,4 @@
-#include "MazeGenerator.h"
-// #include <stdlib.h>
-// #include <bitset>
+#include "MazeGenerator.hpp"
 
 MazeGenerator::MazeGenerator(int xTiles, int yTiles, int startX, int startY, int finishX, int finishY)
 : xTiles(xTiles), yTiles(yTiles), startX(startX), startY(startY), finishX(finishX), finishY(finishY){
@@ -16,7 +14,7 @@ uint8_t* MazeGenerator::generateMaze(){
     maze[startY * xTiles + startX] = VISITED;
     int visited_count = 1;
 
-    auto offset = [&](int x, int y){
+    auto offset = [&](const int& x, const int& y){
         return (stack.top().second + y) * xTiles + (stack.top().first + x);
     };
 

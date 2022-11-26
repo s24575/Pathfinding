@@ -1,4 +1,4 @@
-#include "DFS.h"
+#include "DFS.hpp"
 
 DepthFirstSearch::DepthFirstSearch(Graph* graph, std::vector<sf::RectangleShape>* TileMap, Node* start, Node* finish)
     : Pathfinding(graph, TileMap, start, finish)

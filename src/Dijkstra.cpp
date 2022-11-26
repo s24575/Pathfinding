@@ -1,4 +1,4 @@
-#include "Dijkstra.h"
+#include "Dijkstra.hpp"
 
 Dijkstra::Dijkstra(Graph* graph, std::vector<sf::RectangleShape>* TileMap, Node* start, Node* finish)
     : Pathfinding(graph, TileMap, start, finish)

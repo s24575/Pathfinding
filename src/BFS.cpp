@@ -1,4 +1,4 @@
-#include "BFS.h"
+#include "BFS.hpp"
 
 BreadthFirstSearch::BreadthFirstSearch(Graph* graph, std::vector<sf::RectangleShape>* TileMap, Node* start, Node* finish)
     : Pathfinding(graph, TileMap, start, finish)

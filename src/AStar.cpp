@@ -1,4 +1,4 @@
-#include "AStar.h"
+#include "AStar.hpp"
 
 AStar::AStar(Graph* graph, std::vector<sf::RectangleShape>* TileMap, Node* start, Node* finish)
     : Pathfinding(graph, TileMap, start, finish)

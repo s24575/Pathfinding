@@ -1,4 +1,4 @@
-#include "Board.h"
+#include "Board.hpp"
 
 Board::Board(sf::RenderWindow* _window)
     : _window(_window),
@@ -18,7 +18,7 @@ void Board::generateMaze() {
     } while (finishX == startX && finishY == startY);
 
     graph.fullReset();
-    MazeGenerator maze{ maze_width, maze_height, startX, startY, finishX, finishY };
+    MazeGenerator maze(maze_width, maze_height, startX, startY, finishX, finishY);
     convertMazeToBoard(maze.generateMaze());
 
     startX = startX * (corridor_width + 1) + 2;
@@ -74,7 +74,8 @@ void Board::createAlgorithm(algorithm_type type){
 }
 
 void Board::runAlgorithm(int n){
-    if(algorithm && !algorithm->hasFinished()) algorithm->runAlgorithm(n);
+    if(algorithm && !algorithm->hasFinished())
+        algorithm->runAlgorithm(n);
 }
 
 void Board::editWall(sf::Vector2i const& pos){
@@ -84,7 +85,7 @@ void Board::editWall(sf::Vector2i const& pos){
         switch (placeWallType) {
         case WallType::START:
             if (x != start->x || y != start->y) {
-                hasMoved = true;
+                hasChanged = true;
                 const int startX = start->x;
                 const int startY = start->y;
                 start = &graph.getNode(x, y);
@@ -93,7 +94,7 @@ void Board::editWall(sf::Vector2i const& pos){
             break;
         case WallType::FINISH:
             if (x != finish->x || y != finish->y) {
-                hasMoved = true;
+                hasChanged = true;
                 const int finishX = finish->x;
                 const int finishY = finish->y;
                 finish = &graph.getNode(x, y);
@@ -102,7 +103,7 @@ void Board::editWall(sf::Vector2i const& pos){
             break;
         case WallType::EMPTY:
         case WallType::WALL:
-            hasMoved = true;
+            hasChanged = true;
             graph.getNode(x, y).obstacle = (bool)placeWallType;
             break;
         }
@@ -141,7 +142,7 @@ void Board::drawAllSquares() const {
     _window->draw(tiles);
 }
 
-void Board::updateSquare(int const& x, int const& y){
+void Board::updateSquare(const int& x, const int& y){
     sf::Color color;
     if (x == start->x && y == start->y) color = Green;
     else if (x == finish->x && y == finish->y) color = Red;

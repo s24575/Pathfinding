@@ -1,4 +1,4 @@
-#include "Graph.h"
+#include "Graph.hpp"
 
 Graph::Graph(int xTiles, int yTiles) : xTiles(xTiles), yTiles(yTiles){
     graph.reserve(xTiles * yTiles);
