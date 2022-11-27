@@ -13,7 +13,7 @@ For more information compile and run the project.
 ```
 mkdir build
 cd build
-cmake <path-to-cloned-repo>
+cmake ..
 cmake --build .
 ./src/imgui-sfml-example # Linux
 .\src\Debug\imgui-sfml-example.exe # Windows
