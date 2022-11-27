@@ -2,10 +2,15 @@ cmake_minimum_required (VERSION 3.24)
 
 include(FetchContent)
 
-project("Pathfinding" VERSION 0.1.0)
+project(Pathfinding)
 
 set (CMAKE_CXX_STANDARD 20)
 set (CMAKE_CXX_STANDARD_REQUIRED True)
+
+
+# Move libraries to same folder as .exe
+set (CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 # Dependencies
 set(SFML_VERSION "2.6.x")
@@ -55,6 +60,7 @@ set(SOURCE
     "src/DFS.cpp"
     "src/Dijkstra.cpp"
     "src/Graph.cpp"
+    "src/ImGuiCustomWindow.cpp"
     "src/main.cpp"
     "src/MazeGenerator.cpp"
     "src/Screen.cpp"

@@ -17,8 +17,8 @@ void ImGuiCustomWindow::processInput(const sf::Event& event) {
 }
 
 void ImGuiCustomWindow::loadWindow(sf::Time deltaTime) {
-    constexpr ImVec2 algorithmButtonSize(75.f, 30.f);
-    constexpr ImVec2 mazeButtonSize(125.f, 30.f);
+    const ImVec2 algorithmButtonSize(75.f, 30.f);
+    const ImVec2 mazeButtonSize(125.f, 30.f);
 
     ImGui::SFML::Update(*window, deltaTime);
     ImGui::SetNextWindowPos(ImVec2(0.f, 0.f));
