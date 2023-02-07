@@ -2,12 +2,14 @@
 
 Board::Board(sf::RenderWindow* _window)
     : _window(_window),
-    graph(X_TILES, Y_TILES)
+    graph(X_TILES, Y_TILES),
+    squareMap(X_TILES, Y_TILES, TILE_SIZE)
 {
     generateMaze();
 }
 
-void Board::generateMaze() {
+void Board::generateMaze()
+{
     int startX, startY, finishX, finishY;
 
     startX = (rand() % maze_width);
@@ -29,16 +31,11 @@ void Board::generateMaze() {
     start = &graph.getNode(startX, startY);
     finish = &graph.getNode(finishX, finishY);
 
-    // squares
-    tileMap.clear();
-    tileMap.reserve(xTiles * yTiles);
-    for (int i = 0; i < xTiles * yTiles; ++i)
-        tileMap.emplace_back(sf::Vector2f((float)tileSize, (float)tileSize));
-
-    for (int y = 0; y < yTiles; y++) {
-        for (int x = 0; x < xTiles; x++) {
-            tileMap[y * xTiles + x].setPosition(x * (float)tileSize, y * (float)tileSize);
-            updateSquare(x, y);
+    for (int y = 0; y < yTiles; y++)
+    {
+        for (int x = 0; x < xTiles; x++)
+        {
+            updateSquareColor(x, y);
         }
     }
 }
@@ -57,16 +54,16 @@ void Board::updateSettings(bool areDiagonalsEnabled, int graphWeight, int distan
 void Board::createAlgorithm(algorithm_type type){
     switch (type) {
     case algorithm_type::DFS:
-        algorithm = std::make_unique<DepthFirstSearch>(&graph, &tileMap, start, finish);
+        algorithm = std::make_unique<DepthFirstSearch>(&graph, &squareMap, start, finish);
         break;
     case algorithm_type::BFS:
-        algorithm = std::make_unique<BreadthFirstSearch>(&graph, &tileMap, start, finish);
+        algorithm = std::make_unique<BreadthFirstSearch>(&graph, &squareMap, start, finish);
         break;
     case algorithm_type::DIJKSTRA:
-        algorithm = std::make_unique<Dijkstra>(&graph, &tileMap, start, finish);
+        algorithm = std::make_unique<Dijkstra>(&graph, &squareMap, start, finish);
         break;
     case algorithm_type::ASTAR:
-        algorithm = std::make_unique<AStar>(&graph, &tileMap, start, finish);
+        algorithm = std::make_unique<AStar>(&graph, &squareMap, start, finish);
         break;
     }
 
@@ -89,7 +86,7 @@ void Board::editWall(sf::Vector2i const& pos){
                 const int startX = start->x;
                 const int startY = start->y;
                 start = &graph.getNode(x, y);
-                updateSquare(startX, startY);
+                updateSquareColor(startX, startY);
             }
             break;
         case WallType::FINISH:
@@ -98,7 +95,7 @@ void Board::editWall(sf::Vector2i const& pos){
                 const int finishX = finish->x;
                 const int finishY = finish->y;
                 finish = &graph.getNode(x, y);
-                updateSquare(finishX, finishY);
+                updateSquareColor(finishX, finishY);
             }
             break;
         case WallType::EMPTY:
@@ -108,7 +105,7 @@ void Board::editWall(sf::Vector2i const& pos){
             break;
         }
         
-        updateSquare(x, y);
+        updateSquareColor(x, y);
     }
 }
 
@@ -123,40 +120,33 @@ void Board::checkWall(sf::Vector2i const& pos){
     }
 }
 
-void Board::drawAllSquares() const {
-    /*static sf::VertexArray tiles(sf::Quads, 4 * xTiles * yTiles);
-    tiles.clear();
-    tiles.resize(4 * xTiles * yTiles);*/
-    sf::VertexArray tiles(sf::Quads, 4 * xTiles * yTiles);
-    sf::Vector2f position;
-    sf::Color color;
-    const size_t n = tileMap.size();
-    for (size_t i = 0; i < n; ++i) {
-        position = tileMap[i].getPosition();
-        color = tileMap[i].getFillColor();
-        tiles[4 * i] = sf::Vertex(position, color);
-        tiles[4 * i + 1] = sf::Vertex(position + sf::Vector2f((float)tileSize, 0.f), color);
-        tiles[4 * i + 2] = sf::Vertex(position + sf::Vector2f((float)tileSize, (float)tileSize), color);
-        tiles[4 * i + 3] = sf::Vertex(position + sf::Vector2f(0.f, (float)tileSize), color);
-    };
-    _window->draw(tiles);
+void Board::drawAllSquares()
+{
+    _window->draw(squareMap);
 }
 
-void Board::updateSquare(const int& x, const int& y){
-    sf::Color color;
-    if (x == start->x && y == start->y) color = Green;
-    else if (x == finish->x && y == finish->y) color = Red;
-    else if (graph.getNode(x, y).obstacle) color = Black;
-    else color = Gray;
-    tileMap[y * xTiles + x].setFillColor(color);
+sf::Color Board::getSquareColor(const int& x, const int& y)
+{
+    if (x == start->x && y == start->y) return squareMap.startColor;
+    if (x == finish->x && y == finish->y) return squareMap.endColor;
+    if (graph.getNode(x, y).obstacle) return squareMap.wallColor;
+    return squareMap.emptyColor;
+}
+
+void Board::updateSquareColor(const int& x, const int& y)
+{
+    const sf::Color& color = getSquareColor(x, y);
+    squareMap.setSquareColor(x, y, color);
 }
 
 void Board::reset(){
-    for(auto& tile : tileMap){
-        if(tile.getFillColor() != Black) tile.setFillColor(Gray);
+    for (size_t y = 0; y < yTiles; y++)
+    {
+        for (size_t x = 0; x < xTiles; x++)
+        {
+            updateSquareColor(x, y);
+        }
     }
-    tileMap[start->y * xTiles + start->x].setFillColor(Green);
-    tileMap[finish->y * xTiles + finish->x].setFillColor(Red);
     graph.reset();
     algorithm.reset();
 }
@@ -165,7 +155,7 @@ void Board::removeAllWalls(){
     for(int y = 0; y < yTiles; y++){
         for(int x = 0; x < xTiles; x++){
             graph.getNode(x, y).obstacle = false;
-            updateSquare(x, y);
+            updateSquareColor(x, y);
         }
     }
     graph.reset();

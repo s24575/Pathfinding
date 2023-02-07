@@ -4,23 +4,22 @@
 #include <queue>
 #include "Pathfinding.hpp"
 
-class AStar : public Pathfinding{
+class AStar : public Pathfinding
+{
 public:
-    AStar(Graph* graph, std::vector<sf::RectangleShape>* TileMap, Node* start, Node* finish);
+    AStar(Graph* graph, SquareMap* squareMap, Node* start, Node* finish);
 
     bool runAlgorithm(int const& n) override;
 
-    struct costComparator{
-      bool operator()(const Node* a, const Node* b) const{ return a->g_cost + a->h_cost > b->g_cost + b->h_cost; }
+    struct costComparator
+    {
+        bool operator()(const Node* a, const Node* b) const { return a->g_cost + a->h_cost > b->g_cost + b->h_cost; }
     };
 
 private:
     std::priority_queue<Node*, std::vector<Node*>, costComparator> priority_queue;
 
     void runBacktrack();
-
-    double calculateManhattanDistance(Node* start, Node* finish);
-    double calculateEuclideanDistance(Node* start, Node* finish);
 };
 
 #endif // ASTAR_H

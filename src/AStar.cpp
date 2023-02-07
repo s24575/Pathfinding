@@ -1,7 +1,7 @@
 #include "AStar.hpp"
 
-AStar::AStar(Graph* graph, std::vector<sf::RectangleShape>* TileMap, Node* start, Node* finish)
-    : Pathfinding(graph, TileMap, start, finish)
+AStar::AStar(Graph* graph, SquareMap* squareMap, Node* start, Node* finish)
+    : Pathfinding(graph, squareMap, start, finish)
 {
     priority_queue.push(start);
     start->g_cost = 0;
@@ -22,7 +22,7 @@ bool AStar::runAlgorithm(int const& n){
         }
 
         if(current != start && current != finish)
-            (*TileMap)[current->y * graph->xTiles + current->x].setFillColor(sf::Color::White);
+            squareMap->setSquareColor(current->x, current->y, squareMap->visitedColor);
 
         for(Node* neighbor : current->neighbors){
             if (neighbor->visited || (neighbor->obstacle && neighbor != finish)) continue;
@@ -33,7 +33,8 @@ bool AStar::runAlgorithm(int const& n){
                 neighbor->h_cost = calculateEuclideanDistance(neighbor, finish);
                 neighbor->previous = current;
                 priority_queue.push(neighbor);
-                if(neighbor != finish) (*TileMap)[neighbor->y * graph->xTiles + neighbor->x].setFillColor(sf::Color::Yellow);
+                if(neighbor != finish)
+                    squareMap->setSquareColor(neighbor->x, neighbor->y, squareMap->searchedColor);
             }
         }
     }
@@ -44,15 +45,7 @@ void AStar::runBacktrack(){
     if(!finish->previous) return;
     Node* backtrack = finish->previous;
     while(backtrack != start){
-        (*TileMap)[backtrack->y * graph->xTiles + backtrack->x].setFillColor(sf::Color::Blue);
+        squareMap->setSquareColor(backtrack->x, backtrack->y, squareMap->backtrackingColor);
         backtrack = backtrack->previous;
     }
-}
-
-double AStar::calculateManhattanDistance(Node* start, Node* finish){
-    return (double)abs(start->x - finish->x) + (double)abs(start->y - finish->y);
-}
-
-double AStar::calculateEuclideanDistance(Node* start, Node* finish){
-    return sqrt((double)abs(start->x - finish->x) * (double)abs(start->x - finish->x) + (double)abs(start->y - finish->y) * (double)abs(start->y - finish->y));
 }

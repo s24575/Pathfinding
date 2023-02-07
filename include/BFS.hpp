@@ -6,7 +6,7 @@
 
 class BreadthFirstSearch : public Pathfinding{
 public:
-    BreadthFirstSearch(Graph* graph, std::vector<sf::RectangleShape>* TileMap, Node* start, Node* finish);
+    BreadthFirstSearch(Graph* graph, SquareMap* squareMap, Node* start, Node* finish);
 
     bool runAlgorithm(int const& n) override;
 

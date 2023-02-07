@@ -6,7 +6,7 @@
 
 class Dijkstra : public Pathfinding{
 public:
-    Dijkstra(Graph* graph, std::vector<sf::RectangleShape>* TileMap, Node* start, Node* finish);
+    Dijkstra(Graph* graph, SquareMap* squareMap, Node* start, Node* finish);
 
     bool runAlgorithm(int const& n) override;
 
@@ -18,9 +18,6 @@ private:
     std::priority_queue<Node*, std::vector<Node*>, gCostComparator> priority_queue;
 
     void runBacktrack();
-
-    double calculateManhattanDistance(Node* start, Node* finish);
-    double calculateEuclideanDistance(Node* start, Node* finish);
 };
 
 #endif // DIJKSTRA_H

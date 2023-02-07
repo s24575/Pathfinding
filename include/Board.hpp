@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "MazeGenerator.hpp"
 #include "Graph.hpp"
+#include "SquareMap.hpp"
 #include "DFS.hpp"
 #include "BFS.hpp"
 #include "Dijkstra.hpp"
@@ -21,12 +22,10 @@ enum class algorithm_type{
 class Board{
 private:
     sf::RenderWindow* _window;
-    int xTiles = X_TILES;
-    int yTiles = Y_TILES;
+    int xTiles = X_TILES, yTiles = Y_TILES;
     int tileSize = TILE_SIZE;
 
-    int maze_width = MAZE_WIDTH;
-    int maze_height = MAZE_HEIGHT;
+    int maze_width = MAZE_WIDTH, maze_height = MAZE_HEIGHT;
     int corridor_width = MAZE_CORRIDOR_WIDTH;
 
     Node* start;
@@ -41,18 +40,10 @@ private:
     Graph graph;
     std::unique_ptr<Pathfinding> algorithm;
     algorithm_type current_algorithm_type;
-    std::vector<sf::RectangleShape> tileMap;
-
-    const sf::Color Gray {sf::Color{50, 50, 50}};
-    const sf::Color Black {sf::Color::Black};
-    const sf::Color Green {sf::Color::Green};
-    const sf::Color Red {sf::Color::Red};
-    const sf::Color Yellow {sf::Color::Yellow};
-    const sf::Color White {sf::Color::White};
-    const sf::Color Blue {sf::Color::Blue};
-    const sf::Color Magenta {sf::Color::Magenta};
+    SquareMap squareMap;
 
     void convertMazeToBoard(uint8_t* const maze);
+
 public:
     Board(sf::RenderWindow* _window);
     void updateSettings(bool areDiagonalsEnabled, int graphWeight, int distanceCalculation);
@@ -62,8 +53,9 @@ public:
 
     void editWall(sf::Vector2i const& pos);
     void checkWall(sf::Vector2i const& pos);
-    void drawAllSquares() const;
-    void updateSquare(const int& x, const int& y);
+    void drawAllSquares();
+    sf::Color getSquareColor(const int& x, const int& y);
+    void updateSquareColor(const int& x, const int& y);
     void reset();
     void removeAllWalls();
     void generateMaze();

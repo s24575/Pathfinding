@@ -75,14 +75,18 @@ void Screen::run(){
         }
 
         // UPDATE
-        if (board.hasChanged) {
+        if (board.hasChanged)
+        {
             board.hasChanged = false;
             board.reset();
             board.createAlgorithm(imguiWindow.getCurrentAlgorithm());
             board.runAlgorithm(board.getTotalTiles());
         }
-        // progress algorithm so it takes around {SOLVE_TIME} seconds in total
-        else if(!imguiWindow.getIsStopped()) board.runAlgorithm((int)(TOTAL_TILES * clock.getElapsedTime().asSeconds() / SOLVE_TIME));
+        else if (!imguiWindow.getIsStopped())
+        {
+            // progress algorithm so it takes around {SOLVE_TIME} seconds in total
+            board.runAlgorithm((int)(TOTAL_TILES * clock.getElapsedTime().asSeconds() / SOLVE_TIME));
+        }
 
         imguiWindow.loadWindow(clock.restart());
 
