@@ -1,7 +1,7 @@
 #include "Dijkstra.hpp"
 
-Dijkstra::Dijkstra(Graph* graph, SquareMap* squareMap, Node* start, Node* finish)
-    : Pathfinding(graph, squareMap, start, finish)
+Dijkstra::Dijkstra(Graph* graph, SquareMap* squareMap, Node* start, Node* finish, distance_function distanceFunction)
+    : Pathfinding(graph, squareMap, start, finish, distanceFunction)
 {
     priority_queue.push(start);
     start->g_cost = 0;
@@ -27,6 +27,15 @@ bool Dijkstra::runAlgorithm(int const& n){
         for(Node* neighbor : current->neighbors){
             if (neighbor->visited || (neighbor->obstacle && neighbor != finish)) continue;
             double weight = calculateEuclideanDistance(current, neighbor);
+            switch (distanceFunction)
+            {
+            case distance_function::EUCLIDEAN:
+                weight = calculateEuclideanDistance(current, neighbor);
+                break;
+            case distance_function::MANHATTAN:
+                weight = calculateManhattanDistance(current, neighbor);
+                break;
+            }
             double g_cost = current->g_cost + weight;
             if(g_cost < neighbor->g_cost){
                 neighbor->g_cost = g_cost;

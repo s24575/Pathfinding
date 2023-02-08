@@ -7,16 +7,24 @@
 #include "SquareMap.hpp"
 #include <vector>
 
+enum class distance_function
+{
+    EUCLIDEAN,
+    MANHATTAN
+};
+
 class Pathfinding{
 public:
-    Pathfinding(Graph* graph, SquareMap* squareMap, Node* start, Node* finish)
-        : graph(graph), squareMap(squareMap), start(start), finish(finish) {}
+    Pathfinding(Graph* graph, SquareMap* squareMap, Node* start, Node* finish, distance_function distanceFunction)
+        : graph(graph), squareMap(squareMap), start(start), finish(finish), distanceFunction(distanceFunction) {}
 
     virtual ~Pathfinding() {}
 
     virtual bool runAlgorithm(int const& n) = 0;
 
     bool hasFinished() const { return finished; }
+    distance_function getDistanceFunction() const { return distanceFunction; }
+    void setDistanceFunction(distance_function distanceFunction) { this->distanceFunction = distanceFunction; }
 protected:
     Graph* graph;
     SquareMap* squareMap;
@@ -26,6 +34,8 @@ protected:
     Node* finish;
 
     bool finished = false;
+
+    distance_function distanceFunction = distance_function::EUCLIDEAN;
 
     double calculateManhattanDistance(Node* start, Node* finish)
     {

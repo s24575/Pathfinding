@@ -1,7 +1,7 @@
 #include "BFS.hpp"
 
-BreadthFirstSearch::BreadthFirstSearch(Graph* graph, SquareMap* squareMap, Node* start, Node* finish)
-    : Pathfinding(graph, squareMap, start, finish)
+BreadthFirstSearch::BreadthFirstSearch(Graph* graph, SquareMap* squareMap, Node* start, Node* finish, distance_function distanceFunction)
+    : Pathfinding(graph, squareMap, start, finish, distanceFunction)
 {
     queue.push(start);
     start->visited = true;

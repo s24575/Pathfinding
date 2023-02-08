@@ -41,29 +41,39 @@ void Board::generateMaze()
 }
 
 void Board::updateSettings(bool areDiagonalsEnabled, int graphWeight, int distanceCalculation) {
-    if (graph.getDiagonalEnabled() != areDiagonalsEnabled) {
+    bool updateNeighbors = false;
+    if (graph.getDiagonalEnabled() != areDiagonalsEnabled)
+    {
         graph.setDiagonalEnabled(areDiagonalsEnabled);
-        graph.addNeighbors();
+        updateNeighbors = true;
     }
-    if (graph.getWeight() != graphWeight) {
+    if (graph.getWeight() != graphWeight)
+    {
         graph.setWeight(graphWeight);
+        updateNeighbors = true;
+    }
+
+    if (updateNeighbors)
+    {
         graph.addNeighbors();
     }
+
+    //distanceFunction = static_cast<distance_function>(distanceCalculation);
 }
 
-void Board::createAlgorithm(algorithm_type type){
+void Board::createAlgorithm(algorithm_type type, distance_function distanceFunction){
     switch (type) {
     case algorithm_type::DFS:
-        algorithm = std::make_unique<DepthFirstSearch>(&graph, &squareMap, start, finish);
+        algorithm = std::make_unique<DepthFirstSearch>(&graph, &squareMap, start, finish, distanceFunction);
         break;
     case algorithm_type::BFS:
-        algorithm = std::make_unique<BreadthFirstSearch>(&graph, &squareMap, start, finish);
+        algorithm = std::make_unique<BreadthFirstSearch>(&graph, &squareMap, start, finish, distanceFunction);
         break;
     case algorithm_type::DIJKSTRA:
-        algorithm = std::make_unique<Dijkstra>(&graph, &squareMap, start, finish);
+        algorithm = std::make_unique<Dijkstra>(&graph, &squareMap, start, finish, distanceFunction);
         break;
     case algorithm_type::ASTAR:
-        algorithm = std::make_unique<AStar>(&graph, &squareMap, start, finish);
+        algorithm = std::make_unique<AStar>(&graph, &squareMap, start, finish, distanceFunction);
         break;
     }
 

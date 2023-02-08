@@ -41,16 +41,16 @@ void Screen::run(){
                         board.removeAllWalls();
                         break;
                     case sf::Keyboard::D:
-                        board.createAlgorithm(algorithm_type::DFS);
+                        board.createAlgorithm(algorithm_type::DFS, imguiWindow.getDistanceFunction());
                         break;
                     case sf::Keyboard::B:
-                        board.createAlgorithm(algorithm_type::BFS);
+                        board.createAlgorithm(algorithm_type::BFS, imguiWindow.getDistanceFunction());
                         break;
                     case sf::Keyboard::I:
-                        board.createAlgorithm(algorithm_type::DIJKSTRA);
+                        board.createAlgorithm(algorithm_type::DIJKSTRA, imguiWindow.getDistanceFunction());
                         break;
                     case sf::Keyboard::A:
-                        board.createAlgorithm(algorithm_type::ASTAR);
+                        board.createAlgorithm(algorithm_type::ASTAR, imguiWindow.getDistanceFunction());
                         break;
                     default:
                         break;
@@ -79,7 +79,7 @@ void Screen::run(){
         {
             board.hasChanged = false;
             board.reset();
-            board.createAlgorithm(imguiWindow.getCurrentAlgorithm());
+            board.createAlgorithm(imguiWindow.getCurrentAlgorithm(), imguiWindow.getDistanceFunction());
             board.runAlgorithm(board.getTotalTiles());
         }
         else if (!imguiWindow.getIsStopped())

@@ -6,7 +6,7 @@
 
 class Dijkstra : public Pathfinding{
 public:
-    Dijkstra(Graph* graph, SquareMap* squareMap, Node* start, Node* finish);
+    Dijkstra(Graph* graph, SquareMap* squareMap, Node* start, Node* finish, distance_function distanceFunction);
 
     bool runAlgorithm(int const& n) override;
 

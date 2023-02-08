@@ -7,7 +7,7 @@
 class AStar : public Pathfinding
 {
 public:
-    AStar(Graph* graph, SquareMap* squareMap, Node* start, Node* finish);
+    AStar(Graph* graph, SquareMap* squareMap, Node* start, Node* finish, distance_function distanceFunction);
 
     bool runAlgorithm(int const& n) override;
 

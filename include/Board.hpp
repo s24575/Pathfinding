@@ -34,8 +34,10 @@ private:
     WallType placeWallType;
 
     // cached settings
-    int graphWeight = 1;
-    int distanceCalculation = 0;
+    //int graphWeight = 1;
+    //int distanceCalculation = 0;
+    distance_function distanceFunction = distance_function::EUCLIDEAN;
+
 
     Graph graph;
     std::unique_ptr<Pathfinding> algorithm;
@@ -48,7 +50,7 @@ public:
     Board(sf::RenderWindow* _window);
     void updateSettings(bool areDiagonalsEnabled, int graphWeight, int distanceCalculation);
 
-    void createAlgorithm(algorithm_type type);
+    void createAlgorithm(algorithm_type type, distance_function distanceFunction);
     void runAlgorithm(int n);
 
     void editWall(sf::Vector2i const& pos);

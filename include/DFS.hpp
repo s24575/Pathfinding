@@ -6,7 +6,7 @@
 
 class DepthFirstSearch : public Pathfinding{
 public:
-    DepthFirstSearch(Graph* graph, SquareMap* squareMap, Node* start, Node* finish);
+    DepthFirstSearch(Graph* graph, SquareMap* squareMap, Node* start, Node* finish, distance_function distanceFunction);
 
     bool runAlgorithm(int const& n) override;
 

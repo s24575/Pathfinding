@@ -61,14 +61,14 @@ void ImGuiCustomWindow::loadWindow(sf::Time deltaTime) {
         static const char* items[] = { "DFS", "BFS", "Dijkstra", "A*" };
         ImGui::Combo("algorithm type", &currentAlgorithm, items, IM_ARRAYSIZE(items));
 
-        auto algorithm = static_cast<algorithm_type>(currentAlgorithm);
+        algorithm_type algorithm = static_cast<algorithm_type>(currentAlgorithm);
         if (algorithm == algorithm_type::DIJKSTRA || algorithm == algorithm_type::ASTAR) {
             ImGui::SliderInt("weight", &graphWeight, 1, 1000);
 
             ImGui::AlignTextToFramePadding();
             ImGui::Text("Distance:"); ImGui::SameLine();
-            ImGui::RadioButton("Euclidean", &distanceCalculation, 0); ImGui::SameLine();
-            ImGui::RadioButton("Manhattan", &distanceCalculation, 1);
+            ImGui::RadioButton("Euclidean", &distanceCalculation, static_cast<int>(distance_function::EUCLIDEAN)); ImGui::SameLine();
+            ImGui::RadioButton("Manhattan", &distanceCalculation, static_cast<int>(distance_function::MANHATTAN));
         }
 
         ImGui::Checkbox("diagonals moves", &areDiagonalsEnabled);
@@ -78,9 +78,9 @@ void ImGuiCustomWindow::loadWindow(sf::Time deltaTime) {
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.30f, 0.8f, 0.8f));
         if (ImGui::Button("START", algorithmButtonSize)) {
             isStopped = false;
-            board->reset();
             board->updateSettings(areDiagonalsEnabled, graphWeight, distanceCalculation);
-            board->createAlgorithm(static_cast<algorithm_type>(currentAlgorithm));
+            board->reset();
+            board->createAlgorithm(static_cast<algorithm_type>(currentAlgorithm), getDistanceFunction());
         }
         ImGui::PopStyleColor(3);
 
