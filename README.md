@@ -1,15 +1,18 @@
-Pathfinding Visualizer
-======================
+# Pathfinding Visualizer
 
-Interactive showcase of 4 most popular pathfinding algorithms:
+Interactive visualization of 4 most popular pathfinding algorithms:
+
 - DepthFirstSearch
 - BreadthFirstSearch
 - Dijkstra's
-- A*
+- A\*
 
-For more information compile and run the project.
+## Example
+
+<img src="images/pathfinding_example.png" alt="Example image" width="600"/>
 
 ## How to compile
+
 ```
 mkdir build
 cd build
