@@ -4,9 +4,9 @@ SquareMap::SquareMap(int xTiles, int yTiles, int tileSize)
     : xTiles(xTiles)
 {
     tiles.setPrimitiveType(sf::Quads);
-    for (size_t y = 0; y < yTiles; y++)
+    for (int y = 0; y < yTiles; y++)
     {
-        for (size_t x = 0; x < xTiles; x++)
+        for (int x = 0; x < xTiles; x++)
         {
             {
                 sf::Vector2f position = sf::Vector2f(x * (float)tileSize, y * (float)tileSize);

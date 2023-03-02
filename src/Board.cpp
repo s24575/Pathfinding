@@ -150,9 +150,9 @@ void Board::updateSquareColor(const int& x, const int& y)
 }
 
 void Board::reset(){
-    for (size_t y = 0; y < yTiles; y++)
+    for (int y = 0; y < yTiles; y++)
     {
-        for (size_t x = 0; x < xTiles; x++)
+        for (int x = 0; x < xTiles; x++)
         {
             updateSquareColor(x, y);
         }

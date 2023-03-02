@@ -7,51 +7,41 @@ AStar::AStar(Graph* graph, SquareMap* squareMap, Node* start, Node* finish, dist
     start->g_cost = 0;
 }
 
-bool AStar::runAlgorithm(int const& n){
-    for(int i = 0; i < n; i++){
-        if(priority_queue.empty()) return true;
+bool AStar::runAlgorithm(const int& n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        if (priority_queue.empty()) return true;
 
         current = priority_queue.top();
         current->visited = true;
         priority_queue.pop();
 
-        if(current == finish){
+        if (current == finish)
+        {
             runBacktrack();
             finished = true;
             return true;
         }
 
-        if(current != start && current != finish)
+        if (current != start && current != finish)
             squareMap->setSquareColor(current->x, current->y, squareMap->visitedColor);
 
-        for(Node* neighbor : current->neighbors){
+        for (Node* neighbor : current->neighbors)
+        {
             if (neighbor->visited || (neighbor->obstacle && neighbor != finish)) continue;
-            double weight;
-            switch (distanceFunction)
+
+            double g_cost = current->g_cost + calculateDistance(current, neighbor);
+
+            if (g_cost < neighbor->g_cost)
             {
-            case distance_function::EUCLIDEAN:
-                weight = calculateEuclideanDistance(current, neighbor) * (float)graph->getWeight() * 0.01;
-                break;
-            case distance_function::MANHATTAN:
-                weight = calculateManhattanDistance(current, neighbor) * (float)graph->getWeight() * 0.01;
-                break;
-            }
-            double g_cost = current->g_cost + weight;
-            if(g_cost < neighbor->g_cost){
                 neighbor->g_cost = g_cost;
-                //neighbor->h_cost = calculateEuclideanDistance(neighbor, finish);
-                switch (distanceFunction)
-                {
-                case distance_function::EUCLIDEAN:
-                    neighbor->h_cost = calculateEuclideanDistance(neighbor, finish);
-                    break;
-                case distance_function::MANHATTAN:
-                    neighbor->h_cost = calculateManhattanDistance(neighbor, finish);
-                    break;
-                }
+                neighbor->h_cost = calculateDistance(neighbor, finish);
                 neighbor->previous = current;
+
                 priority_queue.push(neighbor);
-                if(neighbor != finish)
+
+                if (neighbor != finish)
                     squareMap->setSquareColor(neighbor->x, neighbor->y, squareMap->searchedColor);
             }
         }
@@ -59,10 +49,12 @@ bool AStar::runAlgorithm(int const& n){
     return false;
 }
 
-void AStar::runBacktrack(){
-    if(!finish->previous) return;
+void AStar::runBacktrack()
+{
+    if (!finish->previous) return;
     Node* backtrack = finish->previous;
-    while(backtrack != start){
+    while (backtrack != start)
+    {
         squareMap->setSquareColor(backtrack->x, backtrack->y, squareMap->backtrackingColor);
         backtrack = backtrack->previous;
     }

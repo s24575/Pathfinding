@@ -37,6 +37,19 @@ protected:
 
     distance_function distanceFunction = distance_function::EUCLIDEAN;
 
+    double calculateDistance(Node* start, Node* finish)
+    {
+        switch (distanceFunction)
+        {
+            case distance_function::EUCLIDEAN:
+                return calculateEuclideanDistance(start, finish) * (float)graph->getWeight() * 0.01;
+            case distance_function::MANHATTAN:
+                return calculateManhattanDistance(start, finish) * (float)graph->getWeight() * 0.01;
+        }
+
+        return 0.0;
+    }
+
     double calculateManhattanDistance(Node* start, Node* finish)
     {
         return (double)abs(start->x - finish->x) + (double)abs(start->y - finish->y);
