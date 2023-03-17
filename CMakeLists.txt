@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.24)
+cmake_minimum_required (VERSION 3.16)
 
 include(FetchContent)
 
@@ -64,6 +64,7 @@ set(SOURCE
     "src/main.cpp"
     "src/MazeGenerator.cpp"
     "src/Screen.cpp"
+    "src/SquareMap.cpp"
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE})

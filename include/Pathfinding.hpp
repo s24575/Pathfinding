@@ -6,6 +6,7 @@
 #include "Graph.hpp"
 #include "SquareMap.hpp"
 #include <vector>
+#include <cmath>
 
 enum class distance_function
 {

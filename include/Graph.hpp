@@ -1,6 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#include <cmath>
 #include <vector>
 
 enum class WallType {

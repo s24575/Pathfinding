@@ -3,6 +3,7 @@
 
 #include <stack>
 #include <vector>
+#include <cstdint>
 
 class MazeGenerator{
 private:
