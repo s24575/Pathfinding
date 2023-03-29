@@ -9,7 +9,9 @@ Interactive visualization of 4 most popular pathfinding algorithms:
 
 ## Example
 
-<img src="images/pathfinding_example.PNG" alt="Example image" width="600"/>
+<p align="center">
+	<img src="images/pathfinding_example.PNG" alt="Example image" width="768"/>
+</p>
 
 ## How to compile
 
