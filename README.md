@@ -18,10 +18,10 @@ Interactive visualization of 4 most popular pathfinding algorithms:
 ```
 mkdir build
 cd build
-cmake ..
-cmake --build .
-./src/imgui-sfml-example # Linux
-.\src\Debug\imgui-sfml-example.exe # Windows
+cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake --build . --config Release
+./src/Pathfinding # Linux
+.\Release\Pathfinding.exe # Windows
 ```
 
 ## Dependencies
