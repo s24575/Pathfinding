@@ -7,6 +7,8 @@ Interactive visualization of 4 most popular pathfinding algorithms:
 - Dijkstra's
 - A\*
 
+For more information, please build and launch the program.
+
 ## Example
 
 <p align="center">
@@ -26,7 +28,7 @@ cmake --build . --config Release
 
 ## Dependencies
 
-CMake >= 3.24
+CMake >= 3.16
 
 In case you're on Linux, you'll need to install dependencies for building SFML
 specified [here](https://www.sfml-dev.org/tutorials/2.5/compile-with-cmake.php#installing-dependencies).
