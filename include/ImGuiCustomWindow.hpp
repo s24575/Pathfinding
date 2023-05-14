@@ -16,6 +16,8 @@ public:
 
 	bool wantCaptureMouse() const { return io->WantCaptureMouse; }
 	algorithm_type getCurrentAlgorithm() const { return static_cast<algorithm_type>(currentAlgorithm); }
+	bool getAreDiagonalsEnabled() const { return areDiagonalsEnabled; }
+	int getGraphWeight() const { return graphWeight; }
 	distance_function getDistanceFunction() const { return static_cast<distance_function>(distanceCalculation); }
 	bool getIsStopped() const { return isStopped; }
 private:

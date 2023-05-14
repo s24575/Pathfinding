@@ -40,11 +40,11 @@ void Board::generateMaze()
     }
 }
 
-void Board::updateSettings(bool areDiagonalsEnabled, int graphWeight, int distanceCalculation) {
+void Board::updateSettings(bool getAreDiagonalsEnabled, int graphWeight, distance_function distanceCalculation) {
     bool updateNeighbors = false;
-    if (graph.getDiagonalEnabled() != areDiagonalsEnabled)
+    if (graph.getDiagonalEnabled() != getAreDiagonalsEnabled)
     {
-        graph.setDiagonalEnabled(areDiagonalsEnabled);
+        graph.setDiagonalEnabled(getAreDiagonalsEnabled);
         updateNeighbors = true;
     }
     if (graph.getWeight() != graphWeight)
@@ -58,10 +58,10 @@ void Board::updateSettings(bool areDiagonalsEnabled, int graphWeight, int distan
         graph.addNeighbors();
     }
 
-    //distanceFunction = static_cast<distance_function>(distanceCalculation);
+    distanceFunction = distanceCalculation;
 }
 
-void Board::createAlgorithm(algorithm_type type, distance_function distanceFunction){
+void Board::createAlgorithm(algorithm_type type){
     switch (type) {
     case algorithm_type::DFS:
         algorithm = std::make_unique<DepthFirstSearch>(&graph, &squareMap, start, finish, distanceFunction);

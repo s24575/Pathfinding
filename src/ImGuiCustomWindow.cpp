@@ -78,9 +78,9 @@ void ImGuiCustomWindow::loadWindow(sf::Time deltaTime) {
         ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4)ImColor::HSV(0.30f, 0.8f, 0.8f));
         if (ImGui::Button("START", algorithmButtonSize)) {
             isStopped = false;
-            board->updateSettings(areDiagonalsEnabled, graphWeight, distanceCalculation);
+            board->updateSettings(areDiagonalsEnabled, graphWeight, static_cast<distance_function>(distanceCalculation));
             board->reset();
-            board->createAlgorithm(static_cast<algorithm_type>(currentAlgorithm), getDistanceFunction());
+            board->createAlgorithm(static_cast<algorithm_type>(currentAlgorithm));
         }
         ImGui::PopStyleColor(3);
 

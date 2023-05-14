@@ -7,7 +7,7 @@ Dijkstra::Dijkstra(Graph* graph, SquareMap* squareMap, Node* start, Node* finish
     start->g_cost = 0;
 }
 
-bool Dijkstra::runAlgorithm(const int& n)
+bool Dijkstra::runAlgorithm(int n)
 {
     for (int i = 0; i < n; i++)
     {
@@ -31,7 +31,7 @@ bool Dijkstra::runAlgorithm(const int& n)
         {
             if (neighbor->visited || (neighbor->obstacle && neighbor != finish)) continue;
 
-            double g_cost = current->g_cost + calculateDistance(current, neighbor);
+            float g_cost = current->g_cost + calculateDistance(current, neighbor);
 
             if (g_cost < neighbor->g_cost)
             {
@@ -46,15 +46,4 @@ bool Dijkstra::runAlgorithm(const int& n)
         }
     }
     return false;
-}
-
-void Dijkstra::runBacktrack()
-{
-    if (!finish->previous) return;
-    Node* backtrack = finish->previous;
-    while (backtrack != start)
-    {
-        squareMap->setSquareColor(backtrack->x, backtrack->y, squareMap->backtrackingColor);
-        backtrack = backtrack->previous;
-    }
 }

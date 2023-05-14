@@ -7,7 +7,7 @@ BreadthFirstSearch::BreadthFirstSearch(Graph* graph, SquareMap* squareMap, Node*
     start->visited = true;
 }
 
-bool BreadthFirstSearch::runAlgorithm(int const& n){
+bool BreadthFirstSearch::runAlgorithm(int n){
     for(int i = 0; i < n; i++){
         if(queue.empty()) return true;
 
@@ -32,14 +32,6 @@ bool BreadthFirstSearch::runAlgorithm(int const& n){
                 squareMap->setSquareColor(neighbor->x, neighbor->y, squareMap->searchedColor);
         }
     }
-    return false;
-}
 
-void BreadthFirstSearch::runBacktrack(){
-    if(!finish->previous) return;
-    Node* backtrack = finish->previous;
-    while(backtrack != start){
-        squareMap->setSquareColor(backtrack->x, backtrack->y, squareMap->backtrackingColor);
-        backtrack = backtrack->previous;
-    }
+    return false;
 }

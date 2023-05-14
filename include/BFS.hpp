@@ -8,12 +8,10 @@ class BreadthFirstSearch : public Pathfinding{
 public:
     BreadthFirstSearch(Graph* graph, SquareMap* squareMap, Node* start, Node* finish, distance_function distanceFunction);
 
-    bool runAlgorithm(int const& n) override;
+    bool runAlgorithm(int n) override;
 
 private:
     std::queue<Node*> queue;
-
-    void runBacktrack();
 };
 
 #endif // BFS_H

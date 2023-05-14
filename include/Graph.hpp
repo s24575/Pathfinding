@@ -19,8 +19,8 @@ struct Node{
     bool obstacle = false;
     bool visited = false;
     Node* previous = nullptr;
-    double h_cost = INFINITY;
-    double g_cost = INFINITY;
+    float h_cost = INFINITY;
+    float g_cost = INFINITY;
     std::vector<Node*> neighbors;
 };
 
@@ -32,9 +32,9 @@ public:
     void reset();
     void fullReset();
 
-    [[nodiscard]] bool getDiagonalEnabled() const { return diagonalEnabled; }
+    bool getDiagonalEnabled() const { return diagonalEnabled; }
     void setDiagonalEnabled(bool diagonal) { diagonalEnabled = diagonal; }
-    [[nodiscard]] int getWeight() const { return weight; }
+    int getWeight() const { return weight; }
     void setWeight(int new_weight) { weight = new_weight; }
     
     int xTiles;

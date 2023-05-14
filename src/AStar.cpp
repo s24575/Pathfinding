@@ -7,7 +7,7 @@ AStar::AStar(Graph* graph, SquareMap* squareMap, Node* start, Node* finish, dist
     start->g_cost = 0;
 }
 
-bool AStar::runAlgorithm(const int& n)
+bool AStar::runAlgorithm(int n)
 {
     for (int i = 0; i < n; i++)
     {
@@ -31,7 +31,7 @@ bool AStar::runAlgorithm(const int& n)
         {
             if (neighbor->visited || (neighbor->obstacle && neighbor != finish)) continue;
 
-            double g_cost = current->g_cost + calculateDistance(current, neighbor);
+            float g_cost = current->g_cost + calculateDistance(current, neighbor) * graph->getWeight() * 0.01f;
 
             if (g_cost < neighbor->g_cost)
             {
@@ -46,16 +46,6 @@ bool AStar::runAlgorithm(const int& n)
             }
         }
     }
-    return false;
-}
 
-void AStar::runBacktrack()
-{
-    if (!finish->previous) return;
-    Node* backtrack = finish->previous;
-    while (backtrack != start)
-    {
-        squareMap->setSquareColor(backtrack->x, backtrack->y, squareMap->backtrackingColor);
-        backtrack = backtrack->previous;
-    }
+    return false;
 }

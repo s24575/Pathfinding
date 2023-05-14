@@ -10,6 +10,7 @@ void Screen::run(){
     sf::Event event;
     sf::Clock clock;
     bool isLeftPressed = false;
+    float tilesToProcess = 0.0f;
 
     // ImGui setup
     ImGuiCustomWindow imguiWindow(&window, &board);
@@ -41,16 +42,16 @@ void Screen::run(){
                         board.removeAllWalls();
                         break;
                     case sf::Keyboard::D:
-                        board.createAlgorithm(algorithm_type::DFS, imguiWindow.getDistanceFunction());
+                        board.createAlgorithm(algorithm_type::DFS);
                         break;
                     case sf::Keyboard::B:
-                        board.createAlgorithm(algorithm_type::BFS, imguiWindow.getDistanceFunction());
+                        board.createAlgorithm(algorithm_type::BFS);
                         break;
                     case sf::Keyboard::I:
-                        board.createAlgorithm(algorithm_type::DIJKSTRA, imguiWindow.getDistanceFunction());
+                        board.createAlgorithm(algorithm_type::DIJKSTRA);
                         break;
                     case sf::Keyboard::A:
-                        board.createAlgorithm(algorithm_type::ASTAR, imguiWindow.getDistanceFunction());
+                        board.createAlgorithm(algorithm_type::ASTAR);
                         break;
                     default:
                         break;
@@ -78,14 +79,21 @@ void Screen::run(){
         if (board.hasChanged)
         {
             board.hasChanged = false;
+            board.updateSettings(imguiWindow.getAreDiagonalsEnabled(), imguiWindow.getGraphWeight(), imguiWindow.getDistanceFunction());
             board.reset();
-            board.createAlgorithm(imguiWindow.getCurrentAlgorithm(), imguiWindow.getDistanceFunction());
+            board.createAlgorithm(imguiWindow.getCurrentAlgorithm());
             board.runAlgorithm(board.getTotalTiles());
         }
         else if (!imguiWindow.getIsStopped())
         {
             // progress algorithm so it takes around {SOLVE_TIME} seconds in total
-            board.runAlgorithm((int)(TOTAL_TILES * clock.getElapsedTime().asSeconds() / SOLVE_TIME));
+            tilesToProcess += TOTAL_TILES * clock.getElapsedTime().asSeconds() / SOLVE_TIME;
+            if (tilesToProcess >= 1.0f)
+            {
+                int x = floor(tilesToProcess);
+                board.runAlgorithm((int)tilesToProcess);
+                tilesToProcess -= floor(tilesToProcess);
+            }
         }
 
         imguiWindow.loadWindow(clock.restart());

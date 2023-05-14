@@ -19,13 +19,12 @@ public:
     Pathfinding(Graph* graph, SquareMap* squareMap, Node* start, Node* finish, distance_function distanceFunction)
         : graph(graph), squareMap(squareMap), start(start), finish(finish), distanceFunction(distanceFunction) {}
 
-    virtual ~Pathfinding() {}
-
-    virtual bool runAlgorithm(int const& n) = 0;
+    virtual bool runAlgorithm(int n) = 0;
 
     bool hasFinished() const { return finished; }
     distance_function getDistanceFunction() const { return distanceFunction; }
     void setDistanceFunction(distance_function distanceFunction) { this->distanceFunction = distanceFunction; }
+
 protected:
     Graph* graph;
     SquareMap* squareMap;
@@ -36,29 +35,49 @@ protected:
 
     bool finished = false;
 
-    distance_function distanceFunction = distance_function::EUCLIDEAN;
+    distance_function distanceFunction;
 
-    double calculateDistance(Node* start, Node* finish)
+    void runBacktrack()
     {
+        if (!finish->previous) return;
+
+        Node* backtrack = finish->previous;
+        while (backtrack != start)
+        {
+            squareMap->setSquareColor(backtrack->x, backtrack->y, squareMap->backtrackingColor);
+            backtrack = backtrack->previous;
+        }
+    }
+
+    float calculateDistance(Node* start, Node* finish)
+    {
+        float distance = 0.0f;
+
         switch (distanceFunction)
         {
             case distance_function::EUCLIDEAN:
-                return calculateEuclideanDistance(start, finish) * (float)graph->getWeight() * 0.01;
+                distance = calculateEuclideanDistance(start, finish);
+                break;
             case distance_function::MANHATTAN:
-                return calculateManhattanDistance(start, finish) * (float)graph->getWeight() * 0.01;
+                distance = calculateManhattanDistance(start, finish);
+                break;
         }
 
-        return 0.0;
+        return distance;
     }
 
-    double calculateManhattanDistance(Node* start, Node* finish)
+    float calculateManhattanDistance(Node* start, Node* finish)
     {
-        return (double)abs(start->x - finish->x) + (double)abs(start->y - finish->y);
+        int dx = abs(start->x - finish->x);
+        int dy = abs(start->y - finish->y);
+        return (float)(dx + dy);
     }
 
-    double calculateEuclideanDistance(Node* start, Node* finish)
+    float calculateEuclideanDistance(Node* start, Node* finish)
     {
-        return sqrt((double)abs(start->x - finish->x) * (double)abs(start->x - finish->x) + (double)abs(start->y - finish->y) * (double)abs(start->y - finish->y));
+        int dx = abs(start->x - finish->x);
+        int dy = abs(start->y - finish->y);
+        return (float)sqrt(dx * dx + dy * dy);
     }
 };
 

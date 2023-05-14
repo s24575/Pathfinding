@@ -7,7 +7,7 @@ DepthFirstSearch::DepthFirstSearch(Graph* graph, SquareMap* squareMap, Node* sta
     start->visited = true;
 }
 
-bool DepthFirstSearch::runAlgorithm(int const& n){
+bool DepthFirstSearch::runAlgorithm(int n){
     for(int i = 0; i < n; i++){
         if(stack.empty()) return true;
 
@@ -32,14 +32,6 @@ bool DepthFirstSearch::runAlgorithm(int const& n){
                 squareMap->setSquareColor(neighbor->x, neighbor->y, squareMap->searchedColor);
         }
     }
-    return false;
-}
 
-void DepthFirstSearch::runBacktrack(){
-    if(!finish->previous) return;
-    Node* backtrack = finish->previous;
-    while(backtrack != start){
-        squareMap->setSquareColor(backtrack->x, backtrack->y, squareMap->backtrackingColor);
-        backtrack = backtrack->previous;
-    }
+    return false;
 }

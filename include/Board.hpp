@@ -48,9 +48,9 @@ private:
 
 public:
     Board(sf::RenderWindow* _window);
-    void updateSettings(bool areDiagonalsEnabled, int graphWeight, int distanceCalculation);
+    void updateSettings(bool getAreDiagonalsEnabled, int graphWeight, distance_function distanceCalculation);
 
-    void createAlgorithm(algorithm_type type, distance_function distanceFunction);
+    void createAlgorithm(algorithm_type type);
     void runAlgorithm(int n);
 
     void editWall(sf::Vector2i const& pos);
